@@ -9,6 +9,7 @@
 #define DIGIT_2                             0x3
 #define DIGIT_3                             0x4
 #define AS1115_SLAVE_ADDR                   0x3
+#define BRIGHTNESS                          0xf
 
 static const char *AS1115_DRIVER_TAG = "AS1115_DRIVER";
 
@@ -24,7 +25,7 @@ void AS1115_config (int port_num) {
     i2c_write_byte(port_num, AS1115_SLAVE_ADDR,0xc,0x81); //sets shutdown register for normal operation
     i2c_write_byte(port_num, AS1115_SLAVE_ADDR,0xe,0x04); //sets features as desired with hex-code font
     i2c_write_byte(port_num, AS1115_SLAVE_ADDR,0x9,0xff); //decode mode enabled for all digits
-    i2c_write_byte(port_num, AS1115_SLAVE_ADDR,0xa,0x03); //global intensity set to 4/16
+    i2c_write_byte(port_num, AS1115_SLAVE_ADDR,0xa,BRIGHTNESS); //global intensity set to 4/16
     i2c_write_byte(port_num, AS1115_SLAVE_ADDR,0xb,0x3); //scan limit set to only display 4 digits 
 
 }
@@ -76,8 +77,8 @@ void display_RPM (int port_num, float rpm) {
 void display_temp (int port_num, float temp) {
     uint8_t temp_l = (uint32_t) temp % 10; 
     uint8_t temp_h = ( (uint32_t) temp / 10) % 10; 
-    AS1115_display_write(port_num, AS1115_SLAVE_ADDR,DIGIT_2,temp_l);
-    AS1115_display_write(port_num, AS1115_SLAVE_ADDR,DIGIT_3,temp_h);     
+    AS1115_display_write(port_num, AS1115_SLAVE_ADDR,DIGIT_3,temp_l);
+    AS1115_display_write(port_num, AS1115_SLAVE_ADDR,DIGIT_2,temp_h);     
 }
 
 void display_disable(int port_num) {
